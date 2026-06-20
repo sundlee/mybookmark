@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+/*
+ * Tailwind v4 자동 소스 감지에서 .claude 디렉터리를 제외한다.
+ * (Claude Code 스킬의 SKILL.md 등이 잠겨 있어 Turbopack 패닉을 유발하므로)
+ * 경로는 이 CSS 파일 기준 상대경로 — app/ 의 상위가 프로젝트 루트.
+ */
+@source not "../.claude";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
