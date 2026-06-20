@@ -1,12 +1,14 @@
--- 북마크 앱 DB 스키마 (Supabase SQL Editor 에서 1회 실행)
--- 로그인 없는 공용(public) 테이블 구성: anon 키로 읽기/쓰기 허용.
--- ⚠️ publishable 키를 아는 누구나 접근 가능하므로 개인용 프로젝트에만 사용하세요.
+-- 북마크 앱 DB 스키마 (Supabase SQL Editor 에서 1회 실행 — 신규 프로젝트용)
+-- 로그인 사용자별 데이터 격리: 각 유저는 자신의 데이터만 접근 가능.
+-- (기존 프로젝트에 user_id 를 추가하는 마이그레이션은 add-user-id.sql 참고)
 
 -- 1) 카테고리(폴더)
 create table if not exists public.categories (
   id         uuid primary key default gen_random_uuid(),
   name       text not null,
   color      text not null,
+  -- 데이터를 생성한 (로그인한) 유저 ID 자동 기입 + 필수
+  user_id    uuid not null default auth.uid() references auth.users(id) on delete cascade,
   created_at timestamptz not null default now()
 );
 
@@ -19,29 +21,23 @@ create table if not exists public.bookmarks (
   image       text,
   -- 카테고리 삭제 시 해당 북마크는 '미분류'(null) 로 이동
   category_id uuid references public.categories(id) on delete set null,
+  user_id     uuid not null default auth.uid() references auth.users(id) on delete cascade,
   created_at  timestamptz not null default now()
 );
 
-create index if not exists bookmarks_category_id_idx on public.bookmarks(category_id);
-create index if not exists bookmarks_created_at_idx on public.bookmarks(created_at desc);
+create index if not exists categories_user_id_idx     on public.categories(user_id);
+create index if not exists bookmarks_category_id_idx   on public.bookmarks(category_id);
+create index if not exists bookmarks_user_id_idx       on public.bookmarks(user_id);
+create index if not exists bookmarks_created_at_idx    on public.bookmarks(created_at desc);
 
--- 3) RLS 활성화 + 공용 접근 정책 (로그인 없는 anon 전체 허용)
+-- 3) RLS 활성화 + 사용자별 접근 정책 (본인 데이터만)
 alter table public.categories enable row level security;
 alter table public.bookmarks  enable row level security;
 
-drop policy if exists "public access" on public.categories;
-create policy "public access" on public.categories
-  for all using (true) with check (true);
+drop policy if exists "own rows" on public.categories;
+create policy "own rows" on public.categories
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
-drop policy if exists "public access" on public.bookmarks;
-create policy "public access" on public.bookmarks
-  for all using (true) with check (true);
-
--- 4) 기본 카테고리 시드 (테이블이 비어 있을 때만)
-insert into public.categories (name, color)
-select * from (values
-  ('개발', '#6366f1'),
-  ('뉴스', '#f59e0b'),
-  ('엔터테인먼트', '#ec4899')
-) as seed(name, color)
-where not exists (select 1 from public.categories);
+drop policy if exists "own rows" on public.bookmarks;
+create policy "own rows" on public.bookmarks
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);

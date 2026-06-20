@@ -1,11 +1,11 @@
 "use client";
 
 // 북마크 상태를 Supabase 와 연결하는 훅.
-// 마운트 시 categories/bookmarks 를 로딩하고, CRUD 는 Supabase 에 반영 후
-// 로컬 상태를 갱신한다(낙관적 업데이트). DB 컬럼(snake_case)↔앱 타입(camelCase)은
-// 매퍼로 변환한다.
+// 현재 로그인한 사용자의 데이터만 로딩하고, CRUD 는 Supabase 에 반영 후
+// 로컬 상태를 갱신한다(낙관적 업데이트). 계정이 바뀌면 데이터를 다시 불러온다.
+// DB 컬럼(snake_case)↔앱 타입(camelCase)은 매퍼로 변환한다.
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createClient } from "@/src/utils/supabase/client";
 import type { Bookmark, Category } from "./types";
 
@@ -72,27 +72,63 @@ export function useBookmarks(): UseBookmarks {
   const [ready, setReady] = useState(false);
   const [error, setError] = useState("");
 
-  // 마운트 시 Supabase 에서 초기 데이터 로딩
-  useEffect(() => {
-    let active = true;
-    (async () => {
-      const [cats, bms] = await Promise.all([
-        supabase.from("categories").select("*").order("created_at", { ascending: true }),
-        supabase.from("bookmarks").select("*").order("created_at", { ascending: false }),
-      ]);
-      if (!active) return;
-      if (cats.error || bms.error) {
-        setError(cats.error?.message ?? bms.error?.message ?? "데이터를 불러오지 못했습니다.");
-      } else {
-        setCategories((cats.data as CategoryRow[]).map(toCategory));
-        setBookmarks((bms.data as BookmarkRow[]).map(toBookmark));
-      }
+  // 마지막으로 로딩한 사용자 ID. 동일 유저 이벤트(토큰 갱신 등)에서 중복 로딩 방지.
+  // 초기값 undefined 는 "아직 한 번도 로딩 안 함"을 의미한다.
+  const loadedUserIdRef = useRef<string | null | undefined>(undefined);
+
+  // 현재 로그인한 사용자의 데이터만 로딩
+  const loadFor = useCallback(async (uid: string | null) => {
+    setReady(false);
+    setError("");
+
+    // 로그아웃 상태면 데이터를 비운다
+    if (!uid) {
+      setCategories([]);
+      setBookmarks([]);
       setReady(true);
-    })();
-    return () => {
-      active = false;
-    };
+      return;
+    }
+
+    const [cats, bms] = await Promise.all([
+      supabase
+        .from("categories")
+        .select("*")
+        .eq("user_id", uid)
+        .order("created_at", { ascending: true }),
+      supabase
+        .from("bookmarks")
+        .select("*")
+        .eq("user_id", uid)
+        .order("created_at", { ascending: false }),
+    ]);
+
+    // 로딩 도중 계정이 또 바뀌었으면 결과를 버린다
+    if (loadedUserIdRef.current !== uid) return;
+
+    if (cats.error || bms.error) {
+      setError(cats.error?.message ?? bms.error?.message ?? "데이터를 불러오지 못했습니다.");
+    } else {
+      setCategories((cats.data as CategoryRow[]).map(toCategory));
+      setBookmarks((bms.data as BookmarkRow[]).map(toBookmark));
+    }
+    setReady(true);
   }, []);
+
+  // 마운트 시 + 계정 변경 시 데이터 로딩.
+  // onAuthStateChange 는 구독 직후 INITIAL_SESSION 이벤트로 현재 세션을 즉시 전달한다.
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      const uid = session?.user?.id ?? null;
+      // 사용자 ID 가 실제로 바뀐 경우(또는 최초)에만 재로딩
+      if (uid !== loadedUserIdRef.current) {
+        loadedUserIdRef.current = uid;
+        loadFor(uid);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [loadFor]);
 
   const addBookmark = useCallback<UseBookmarks["addBookmark"]>(async (input) => {
     const { data, error } = await supabase

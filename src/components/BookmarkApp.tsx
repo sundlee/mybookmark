@@ -122,27 +122,34 @@ export default function BookmarkApp() {
           </div>
         )}
 
-        {/* 카드 그리드 */}
-        <div className="flex-1 overflow-y-auto p-6">
-          {!ready ? (
-            <div className="flex h-full items-center justify-center text-zinc-400">
-              불러오는 중…
-            </div>
-          ) : visibleBookmarks.length === 0 ? (
-            <EmptyState hasQuery={query.trim().length > 0} onAdd={openAdd} />
-          ) : (
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {visibleBookmarks.map((b) => (
-                <BookmarkCard
-                  key={b.id}
-                  bookmark={b}
-                  category={b.categoryId ? categoryById.get(b.categoryId) : undefined}
-                  onEdit={openEdit}
-                  onRemove={removeBookmark}
-                />
-              ))}
-            </div>
-          )}
+        {/* 카드 그리드 (스크롤 영역) + 본문 맨 아래 푸터 */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="min-h-full p-6">
+            {!ready ? (
+              <div className="flex min-h-[60vh] items-center justify-center text-zinc-400">
+                불러오는 중…
+              </div>
+            ) : visibleBookmarks.length === 0 ? (
+              <EmptyState hasQuery={query.trim().length > 0} onAdd={openAdd} />
+            ) : (
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {visibleBookmarks.map((b) => (
+                  <BookmarkCard
+                    key={b.id}
+                    bookmark={b}
+                    category={b.categoryId ? categoryById.get(b.categoryId) : undefined}
+                    onEdit={openEdit}
+                    onRemove={removeBookmark}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 푸터 — 본문 콘텐츠 맨 아래에 위치해 스크롤해야 보인다 */}
+          <footer className="border-t border-zinc-200 px-6 py-4 text-center text-xs text-zinc-400 dark:border-zinc-800 dark:text-zinc-500">
+            본 페이지는 한 입 크기로 잘라먹는 바이브코딩의 강의롤 보고 작성했습니다.
+          </footer>
         </div>
       </main>
 
@@ -165,7 +172,7 @@ export default function BookmarkApp() {
 
 function EmptyState({ hasQuery, onAdd }: { hasQuery: boolean; onAdd: () => void }) {
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-3 text-center text-zinc-400">
+    <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 text-center text-zinc-400">
       <div className="text-5xl">🔖</div>
       {hasQuery ? (
         <p>검색 결과가 없습니다.</p>
