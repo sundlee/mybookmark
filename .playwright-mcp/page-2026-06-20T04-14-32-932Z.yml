@@ -1,0 +1,31 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - heading "📑 내 북마크" [level=1] [ref=e4]
+    - paragraph [ref=e5]: 계정을 만들고 시작하세요
+    - alert [ref=e29]:
+      - img [ref=e30]
+      - text: 비밀번호가 일치하지 않습니다.
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]: 이메일
+        - textbox "이메일" [ref=e9]:
+          - /placeholder: you@example.com
+          - text: mismatch-test@example.com
+      - generic [ref=e10]:
+        - generic [ref=e11]: 비밀번호
+        - textbox "비밀번호" [ref=e12]:
+          - /placeholder: ••••••••
+          - text: password123
+      - generic [ref=e13]:
+        - generic [ref=e14]: 비밀번호 확인
+        - textbox "비밀번호 확인" [ref=e15]:
+          - /placeholder: ••••••••
+          - text: different456
+      - button "회원가입" [active] [ref=e16]
+    - paragraph [ref=e17]:
+      - text: 이미 계정이 있으신가요?
+      - link "로그인" [ref=e18] [cursor=pointer]:
+        - /url: /login
+  - button "Open Next.js Dev Tools" [ref=e24] [cursor=pointer]:
+    - img [ref=e25]
+  - alert [ref=e28]
