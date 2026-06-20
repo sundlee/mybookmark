@@ -5,7 +5,7 @@
 // 선택·추가·삭제를 처리한다.
 
 import { useState } from "react";
-import type { Bookmark, Category } from "../lib/types";
+import type { Bookmark, Category } from "@/src/lib/types";
 
 /** 선택된 필터 값: 전체(null) / 미분류("none") / 특정 카테고리 id */
 export type CategoryFilter = string | null | "none";

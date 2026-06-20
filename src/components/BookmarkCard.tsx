@@ -5,8 +5,8 @@
 // 클릭하면 새 탭으로 이동한다.
 
 import { useState } from "react";
-import type { Bookmark, Category } from "../lib/types";
-import { getHostname, normalizeUrl } from "../lib/favicon";
+import type { Bookmark, Category } from "@/src/lib/types";
+import { getHostname, normalizeUrl } from "@/src/lib/favicon";
 import Favicon from "./Favicon";
 
 interface BookmarkCardProps {

@@ -4,9 +4,9 @@
 // 사이드바 + 검색 + 카드 그리드 + 추가/수정 모달을 조합한다.
 
 import { useMemo, useState } from "react";
-import { useBookmarks } from "../lib/useBookmarks";
-import { getHostname } from "../lib/favicon";
-import type { Bookmark } from "../lib/types";
+import { useBookmarks } from "@/src/lib/useBookmarks";
+import { getHostname } from "@/src/lib/favicon";
+import type { Bookmark } from "@/src/lib/types";
 import Sidebar, { type CategoryFilter } from "./Sidebar";
 import BookmarkCard from "./BookmarkCard";
 import BookmarkForm, { type BookmarkFormValues } from "./BookmarkForm";

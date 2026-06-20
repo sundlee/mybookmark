@@ -5,7 +5,7 @@
 // 로딩 실패 시 도메인 첫 글자 배지로 대체한다.
 
 import { useState } from "react";
-import { getFaviconUrl, getHostname } from "../lib/favicon";
+import { getFaviconUrl, getHostname } from "@/src/lib/favicon";
 
 interface FaviconProps {
   url: string;

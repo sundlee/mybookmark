@@ -5,7 +5,7 @@
 // 제목·설명·썸네일을 자동으로 채운다(사용자가 직접 수정 가능).
 
 import { useEffect, useRef, useState } from "react";
-import type { Bookmark, Category, OgMetadata } from "../lib/types";
+import type { Bookmark, Category, OgMetadata } from "@/src/lib/types";
 
 export interface BookmarkFormValues {
   title: string;

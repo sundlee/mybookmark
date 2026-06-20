@@ -4,8 +4,8 @@
 // request.url 을 읽으므로 자동으로 동적(runtime) 라우트로 처리된다.
 
 import type { NextRequest } from "next/server";
-import type { OgMetadata } from "@/app/lib/types";
-import { normalizeUrl } from "@/app/lib/favicon";
+import type { OgMetadata } from "@/src/lib/types";
+import { normalizeUrl } from "@/src/lib/favicon";
 
 // HTML 본문을 너무 많이 읽지 않도록 상한 (대부분의 <head> 메타는 앞부분에 있음)
 const MAX_BYTES = 512 * 1024; // 512KB

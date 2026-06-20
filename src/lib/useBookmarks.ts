@@ -6,7 +6,7 @@
 // 매퍼로 변환한다.
 
 import { useCallback, useEffect, useState } from "react";
-import { createClient } from "@/app/utils/supabase/client";
+import { createClient } from "@/src/utils/supabase/client";
 import type { Bookmark, Category } from "./types";
 
 // 모듈 1회 생성 (브라우저 클라이언트는 싱글톤으로 재사용)
