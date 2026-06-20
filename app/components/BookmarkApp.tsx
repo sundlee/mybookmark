@@ -9,10 +9,12 @@ import { getHostname } from "../lib/favicon";
 import type { Bookmark } from "../lib/types";
 import Sidebar, { type CategoryFilter } from "./Sidebar";
 import BookmarkCard from "./BookmarkCard";
-import BookmarkForm from "./BookmarkForm";
+import BookmarkForm, { type BookmarkFormValues } from "./BookmarkForm";
 
 export default function BookmarkApp() {
   const {
+    ready,
+    error,
     categories,
     bookmarks,
     addBookmark,
@@ -59,7 +61,7 @@ export default function BookmarkApp() {
     setFormOpen(true);
   };
 
-  const handleSubmit = (values: { title: string; url: string; categoryId: string | null }) => {
+  const handleSubmit = (values: BookmarkFormValues) => {
     if (editing) {
       updateBookmark(editing.id, values);
     } else {
@@ -113,9 +115,20 @@ export default function BookmarkApp() {
           </button>
         </header>
 
+        {/* Supabase 오류 배너 */}
+        {error && (
+          <div className="border-b border-red-200 bg-red-50 px-6 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">
+            ⚠️ {error}
+          </div>
+        )}
+
         {/* 카드 그리드 */}
         <div className="flex-1 overflow-y-auto p-6">
-          {visibleBookmarks.length === 0 ? (
+          {!ready ? (
+            <div className="flex h-full items-center justify-center text-zinc-400">
+              불러오는 중…
+            </div>
+          ) : visibleBookmarks.length === 0 ? (
             <EmptyState hasQuery={query.trim().length > 0} onAdd={openAdd} />
           ) : (
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

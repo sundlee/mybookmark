@@ -1,0 +1,21 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - heading "📑 내 북마크" [level=1] [ref=e4]
+      - button "전체 0" [ref=e6]:
+        - generic [ref=e7]: 전체
+        - generic [ref=e8]: "0"
+      - button "미분류 0" [ref=e10]:
+        - generic [ref=e11]: 미분류
+        - generic [ref=e12]: "0"
+      - generic [ref=e13]: 카테고리
+      - button "+ 카테고리 추가" [ref=e14]
+    - main [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e17]:
+          - img
+          - textbox "제목 · URL 검색" [ref=e18]
+        - button "+ 북마크 추가" [ref=e19]
+      - generic [ref=e21]: 불러오는 중…
+  - button "Open Next.js Dev Tools" [ref=e27] [cursor=pointer]:
+    - img [ref=e28]
