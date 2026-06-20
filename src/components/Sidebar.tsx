@@ -5,7 +5,11 @@
 // 선택·추가·삭제를 처리한다.
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import type { Bookmark, Category } from "@/src/lib/types";
+import { createClient } from "@/src/utils/supabase/client";
+
+const supabase = createClient();
 
 /** 선택된 필터 값: 전체(null) / 미분류("none") / 특정 카테고리 id */
 export type CategoryFilter = string | null | "none";
@@ -33,8 +37,18 @@ export default function Sidebar({
   onAddCategory,
   onRemoveCategory,
 }: SidebarProps) {
+  const router = useRouter();
   const [adding, setAdding] = useState(false);
   const [newName, setNewName] = useState("");
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  // 로그아웃: Supabase 세션 종료 후 로그인 페이지로 이동
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    await supabase.auth.signOut();
+    router.push("/login");
+    router.refresh();
+  };
 
   const countAll = bookmarks.length;
   const countNone = bookmarks.filter((b) => b.categoryId === null).length;
@@ -121,6 +135,21 @@ export default function Sidebar({
           + 카테고리 추가
         </button>
       )}
+
+      {/* 최하단 로그아웃 버튼 (mt-auto 로 사이드바 맨 아래 고정) */}
+      <button
+        type="button"
+        onClick={handleLogout}
+        disabled={loggingOut}
+        className="mt-auto flex items-center gap-2 rounded-lg border-t border-zinc-200 px-3 pt-4 pb-2 text-left text-sm text-zinc-500 hover:text-red-600 disabled:opacity-50 dark:border-zinc-800 dark:text-zinc-400 dark:hover:text-red-500"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <path d="M16 17l5-5-5-5" />
+          <path d="M21 12H9" />
+        </svg>
+        {loggingOut ? "로그아웃 중…" : "로그아웃"}
+      </button>
     </aside>
   );
 }

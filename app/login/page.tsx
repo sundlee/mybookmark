@@ -23,8 +23,18 @@ export default function LoginPage() {
 
         <LoginForm />
 
+        {/* 비밀번호 찾기 페이지로 이동 */}
+        <p className="mt-4 text-center text-sm">
+          <Link
+            href="/forgot-password"
+            className="text-zinc-500 hover:text-indigo-600 hover:underline dark:text-zinc-400 dark:hover:text-indigo-400"
+          >
+            비밀번호를 잊으셨나요?
+          </Link>
+        </p>
+
         {/* 회원가입 페이지로 이동 */}
-        <p className="mt-6 text-center text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mt-2 text-center text-sm text-zinc-500 dark:text-zinc-400">
           계정이 없으신가요?{" "}
           <Link
             href="/signup"
