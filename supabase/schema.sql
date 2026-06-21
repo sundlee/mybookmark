@@ -30,14 +30,26 @@ create index if not exists bookmarks_category_id_idx   on public.bookmarks(categ
 create index if not exists bookmarks_user_id_idx       on public.bookmarks(user_id);
 create index if not exists bookmarks_created_at_idx    on public.bookmarks(created_at desc);
 
--- 3) RLS 활성화 + 사용자별 접근 정책 (본인 데이터만)
+-- 3) RLS 활성화 + 작업별 세분화 정책 (로그인 사용자, 본인 데이터만)
 alter table public.categories enable row level security;
 alter table public.bookmarks  enable row level security;
 
-drop policy if exists "own rows" on public.categories;
-create policy "own rows" on public.categories
-  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+-- categories
+create policy "categories_select_own" on public.categories
+  for select to authenticated using (auth.uid() = user_id);
+create policy "categories_insert_own" on public.categories
+  for insert to authenticated with check (auth.uid() = user_id);
+create policy "categories_update_own" on public.categories
+  for update to authenticated using (auth.uid() = user_id) with check (auth.uid() = user_id);
+create policy "categories_delete_own" on public.categories
+  for delete to authenticated using (auth.uid() = user_id);
 
-drop policy if exists "own rows" on public.bookmarks;
-create policy "own rows" on public.bookmarks
-  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+-- bookmarks
+create policy "bookmarks_select_own" on public.bookmarks
+  for select to authenticated using (auth.uid() = user_id);
+create policy "bookmarks_insert_own" on public.bookmarks
+  for insert to authenticated with check (auth.uid() = user_id);
+create policy "bookmarks_update_own" on public.bookmarks
+  for update to authenticated using (auth.uid() = user_id) with check (auth.uid() = user_id);
+create policy "bookmarks_delete_own" on public.bookmarks
+  for delete to authenticated using (auth.uid() = user_id);

@@ -6,7 +6,7 @@ import SignupForm from "@/src/components/SignupForm";
 // 상호작용이 필요한 폼은 SignupForm(클라이언트)으로 분리한다.
 
 export const metadata: Metadata = {
-  title: "회원가입 · 내 북마크",
+  title: "회원가입",
 };
 
 export default function SignupPage() {

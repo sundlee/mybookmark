@@ -4,7 +4,7 @@ import ResetPasswordForm from "@/src/components/ResetPasswordForm";
 // 비밀번호 재설정 페이지. 이메일 링크를 통해 진입한다.
 
 export const metadata: Metadata = {
-  title: "비밀번호 재설정 · 내 북마크",
+  title: "비밀번호 재설정",
 };
 
 export default function ResetPasswordPage() {

@@ -6,7 +6,7 @@ import LoginForm from "@/src/components/LoginForm";
 // 상호작용이 필요한 폼은 LoginForm(클라이언트)으로 분리한다.
 
 export const metadata: Metadata = {
-  title: "로그인 · 내 북마크",
+  title: "로그인",
 };
 
 export default function LoginPage() {

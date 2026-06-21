@@ -6,7 +6,7 @@ import ForgotPasswordForm from "@/src/components/ForgotPasswordForm";
 // 상호작용 폼은 ForgotPasswordForm(클라이언트)으로 분리한다.
 
 export const metadata: Metadata = {
-  title: "비밀번호 찾기 · 내 북마크",
+  title: "비밀번호 찾기",
 };
 
 export default function ForgotPasswordPage() {
