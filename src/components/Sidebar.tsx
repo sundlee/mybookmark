@@ -5,6 +5,7 @@
 // 선택·추가·삭제를 처리한다.
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Bookmark, Category } from "@/src/lib/types";
 import { createClient } from "@/src/utils/supabase/client";
@@ -136,20 +137,31 @@ export default function Sidebar({
         </button>
       )}
 
-      {/* 최하단 로그아웃 버튼 (mt-auto 로 사이드바 맨 아래 고정) */}
-      <button
-        type="button"
-        onClick={handleLogout}
-        disabled={loggingOut}
-        className="mt-auto flex items-center gap-2 rounded-lg border-t border-zinc-200 px-3 pt-4 pb-2 text-left text-sm text-zinc-500 hover:text-red-600 disabled:opacity-50 dark:border-zinc-800 dark:text-zinc-400 dark:hover:text-red-500"
-      >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-          <path d="M16 17l5-5-5-5" />
-          <path d="M21 12H9" />
-        </svg>
-        {loggingOut ? "로그아웃 중…" : "로그아웃"}
-      </button>
+      {/* 최하단 영역 (mt-auto 로 사이드바 맨 아래 고정) */}
+      <div className="mt-auto border-t border-zinc-200 pt-4 dark:border-zinc-800">
+        {/* 로그아웃 버튼 */}
+        <button
+          type="button"
+          onClick={handleLogout}
+          disabled={loggingOut}
+          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-zinc-500 hover:text-red-600 disabled:opacity-50 dark:text-zinc-400 dark:hover:text-red-500"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <path d="M16 17l5-5-5-5" />
+            <path d="M21 12H9" />
+          </svg>
+          {loggingOut ? "로그아웃 중…" : "로그아웃"}
+        </button>
+
+        {/* 개인정보 처리방침 링크 (회색) */}
+        <Link
+          href="/privacy"
+          className="block px-3 py-1 text-xs text-zinc-400 hover:text-zinc-600 hover:underline dark:text-zinc-500 dark:hover:text-zinc-300"
+        >
+          개인정보 처리방침
+        </Link>
+      </div>
     </aside>
   );
 }

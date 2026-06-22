@@ -33,6 +33,16 @@ export default function SignupPage() {
             로그인
           </Link>
         </p>
+
+        {/* 개인정보 처리방침 링크 (회색) */}
+        <p className="mt-4 text-center text-xs">
+          <Link
+            href="/privacy"
+            className="text-zinc-400 hover:text-zinc-600 hover:underline dark:text-zinc-500 dark:hover:text-zinc-300"
+          >
+            개인정보 처리방침
+          </Link>
+        </p>
       </div>
     </div>
   );

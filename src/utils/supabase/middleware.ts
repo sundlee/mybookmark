@@ -12,6 +12,10 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
 // 비밀번호 찾기/재설정은 로그아웃 상태에서 접근하므로 공개로 둔다.
 const PUBLIC_PATHS = ["/login", "/signup", "/forgot-password", "/reset-password"];
 
+// 로그인 여부와 무관하게 누구나 접근 가능한 경로.
+// 인증 페이지와 달리, 로그인 상태에서도 인덱스로 리다이렉트하지 않는다.
+const OPEN_PATHS = ["/privacy"];
+
 export async function updateSession(request: NextRequest) {
   // 세션 쿠키 갱신 결과를 담을 응답 객체
   let supabaseResponse = NextResponse.next({ request });
@@ -39,6 +43,12 @@ export async function updateSession(request: NextRequest) {
 
   const path = request.nextUrl.pathname;
   const isPublic = PUBLIC_PATHS.some((p) => path === p || path.startsWith(`${p}/`));
+  const isOpen = OPEN_PATHS.some((p) => path === p || path.startsWith(`${p}/`));
+
+  // 누구나 접근 가능한 경로(예: 개인정보 처리방침)는 리다이렉트 없이 통과
+  if (isOpen) {
+    return supabaseResponse;
+  }
 
   // 미로그인 + 보호 경로 → 로그인 페이지로 리다이렉트
   if (!user && !isPublic) {
