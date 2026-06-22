@@ -14,7 +14,9 @@ const PUBLIC_PATHS = ["/login", "/signup", "/forgot-password", "/reset-password"
 
 // 로그인 여부와 무관하게 누구나 접근 가능한 경로.
 // 인증 페이지와 달리, 로그인 상태에서도 인덱스로 리다이렉트하지 않는다.
-const OPEN_PATHS = ["/privacy"];
+// - /privacy: 개인정보 처리방침
+// - /auth: 소셜 로그인(OAuth) 콜백. 이 시점엔 아직 세션이 없으므로 통과시켜야 한다.
+const OPEN_PATHS = ["/privacy", "/auth"];
 
 export async function updateSession(request: NextRequest) {
   // 세션 쿠키 갱신 결과를 담을 응답 객체
