@@ -11,27 +11,26 @@ export async function GET(request: Request) {
   // 로그인 후 돌아갈 경로 (지정이 없으면 인덱스)
   const next = searchParams.get("next") ?? "/";
 
-  if (code) {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-
-    if (!error) {
-      // 프로덕션(Vercel 등 로드밸런서 뒤)에서는 원본 호스트가
-      // x-forwarded-host 헤더에 담기므로 이를 우선 사용한다.
-      const forwardedHost = request.headers.get("x-forwarded-host");
-      const isLocalEnv = process.env.NODE_ENV === "development";
-
-      if (isLocalEnv) {
-        return NextResponse.redirect(`${origin}${next}`);
-      } else if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`);
-      } else {
-        return NextResponse.redirect(`${origin}${next}`);
-      }
-    }
+  // code 가 없으면 잘못된 진입 → 로그인 페이지로 오류 표시
+  if (!code) {
+    return NextResponse.redirect(`${origin}/login?error=oauth`);
   }
 
-  // code 가 없거나 세션 교환에 실패한 경우 → 로그인 페이지로 오류 표시
-  return NextResponse.redirect(`${origin}/login?error=oauth`);
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
+  const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+  // 세션 교환 실패 → 로그인 페이지로 오류 표시
+  if (error) {
+    return NextResponse.redirect(`${origin}/login?error=oauth`);
+  }
+
+  // 프로덕션(Vercel 등 로드밸런서 뒤)에서는 원본 호스트가 x-forwarded-host
+  // 헤더에 담기므로 이를 우선 사용한다. 로컬 개발 환경에서는 origin 을 쓴다.
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const isLocalEnv = process.env.NODE_ENV === "development";
+  const target =
+    !isLocalEnv && forwardedHost ? `https://${forwardedHost}${next}` : `${origin}${next}`;
+
+  return NextResponse.redirect(target);
 }

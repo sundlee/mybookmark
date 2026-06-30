@@ -9,7 +9,16 @@ export const metadata: Metadata = {
   title: "로그인",
 };
 
-export default function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  // 소셜 로그인 콜백 실패 시 ?error=oauth 로 되돌아온다 → 토스트로 안내
+  const { error } = await searchParams;
+  const initialError =
+    error === "oauth" ? "카카오 로그인에 실패했습니다. 다시 시도해 주세요." : "";
+
   return (
     <div className="flex flex-1 items-center justify-center bg-zinc-50 p-4 dark:bg-zinc-950">
       <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-xl dark:bg-zinc-900">
@@ -21,7 +30,7 @@ export default function LoginPage() {
           로그인하고 북마크를 관리하세요
         </p>
 
-        <LoginForm />
+        <LoginForm initialError={initialError} />
 
         {/* 비밀번호 찾기 페이지로 이동 */}
         <p className="mt-4 text-center text-sm">

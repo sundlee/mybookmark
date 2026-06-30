@@ -47,12 +47,13 @@ function toKoreanError(error: { message: string; code?: string }): string {
 const inputClass =
   "rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100";
 
-export default function LoginForm() {
+export default function LoginForm({ initialError = "" }: { initialError?: string }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  // 콜백 라우트가 ?error= 로 넘긴 오류를 초기 토스트로 표시한다.
+  const [error, setError] = useState(initialError);
 
   // 이메일·비밀번호 모두 입력 + 처리 중이 아닐 때만 제출 가능
   const canSubmit = email.trim() !== "" && password !== "" && !loading;
@@ -88,7 +89,7 @@ export default function LoginForm() {
 
     // 리다이렉트 전에 오류가 나면(네트워크 등) 여기서 처리한다.
     if (oauthError) {
-      setError("카카오 로그인에 실패했습니다. 다시 시도해 주세요.");
+      setError(toKoreanError(oauthError));
       setLoading(false);
     }
   };
@@ -157,7 +158,6 @@ export default function LoginForm() {
           alt="카카오 로그인"
           width={600}
           height={90}
-          priority
           className="h-auto w-full"
         />
       </button>
