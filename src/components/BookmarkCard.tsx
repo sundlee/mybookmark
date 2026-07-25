@@ -27,7 +27,7 @@ export default function BookmarkCard({
   const host = getHostname(bookmark.url);
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-hairline bg-canvas transition-all hover:border-primary-tint/40 hover:shadow-[0_0_32px_0_rgba(0,0,0,0.08)]">
+    <div className="group relative flex flex-col overflow-hidden rounded-xl border border-hairline bg-canvas transition-all hover:border-primary/40 hover:shadow-[0_1px_3px_rgba(20,20,19,0.08)]">
       <a
         href={normalizeUrl(bookmark.url)}
         target="_blank"
@@ -36,7 +36,7 @@ export default function BookmarkCard({
       >
         {/* OG 썸네일 — 항상 같은 높이를 차지해 카드 높이를 균일하게 유지.
             이미지가 없거나 로딩 실패 시 파비콘 플레이스홀더로 대체한다. */}
-        <div className="relative h-36 w-full shrink-0 overflow-hidden bg-canvas-cream">
+        <div className="relative h-36 w-full shrink-0 overflow-hidden bg-surface-card">
           {bookmark.image && imageOk ? (
             // eslint-disable-next-line @next/next/no-img-element -- 외부 OG 이미지는 일반 img 사용
             <img
@@ -47,10 +47,10 @@ export default function BookmarkCard({
               className="h-full w-full object-cover"
             />
           ) : (
-            // 파스텔-메시 플레이스홀더 — cream → lavender 대기감
-            <div className="pastel-mesh flex h-full w-full flex-col items-center justify-center gap-2">
+            // 이미지 없을 때 — 웜 크림 컬러블록 플레이스홀더 (그림자 없는 color-block)
+            <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-surface-card">
               <Favicon url={bookmark.url} size={36} />
-              <span className="max-w-[80%] truncate text-xs text-ink-mute">{host}</span>
+              <span className="max-w-[80%] truncate text-xs text-muted-soft">{host}</span>
             </div>
           )}
         </div>
@@ -59,17 +59,17 @@ export default function BookmarkCard({
           {/* 파비콘 + 도메인 */}
           <div className="flex items-center gap-2">
             <Favicon url={bookmark.url} size={20} />
-            <span className="truncate text-xs text-ink-mute">
+            <span className="truncate text-xs text-muted">
               {host}
             </span>
           </div>
 
-          <h3 className="line-clamp-2 font-bold leading-snug tracking-tight text-ink">
+          <h3 className="line-clamp-2 font-medium leading-snug text-ink">
             {bookmark.title || host}
           </h3>
 
           {bookmark.description && (
-            <p className="line-clamp-2 text-sm text-ink-mute">
+            <p className="line-clamp-2 text-sm text-muted">
               {bookmark.description}
             </p>
           )}
@@ -94,7 +94,7 @@ export default function BookmarkCard({
         <button
           type="button"
           onClick={() => onEdit(bookmark)}
-          className="rounded-md bg-canvas/90 p-1.5 text-ink-mute shadow-sm backdrop-blur-sm hover:text-primary"
+          className="rounded-lg bg-canvas/90 p-1.5 text-muted shadow-sm backdrop-blur-sm hover:text-ink"
           aria-label="수정"
           title="수정"
         >
@@ -106,7 +106,7 @@ export default function BookmarkCard({
         <button
           type="button"
           onClick={() => onRemove(bookmark.id)}
-          className="rounded-md bg-canvas/90 p-1.5 text-ink-mute shadow-sm backdrop-blur-sm hover:text-danger"
+          className="rounded-lg bg-canvas/90 p-1.5 text-muted shadow-sm backdrop-blur-sm hover:text-error"
           aria-label="삭제"
           title="삭제"
         >

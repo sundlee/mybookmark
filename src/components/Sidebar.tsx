@@ -22,6 +22,10 @@ interface SidebarProps {
   onSelect: (filter: CategoryFilter) => void;
   onAddCategory: (name: string, color: string) => void;
   onRemoveCategory: (id: string) => void;
+  /** 모바일 드로어 열림 여부 (md 이상에서는 항상 표시) */
+  open: boolean;
+  /** 모바일 드로어 닫기 */
+  onClose: () => void;
 }
 
 // 새 카테고리에 순환 배정할 색상 팔레트
@@ -37,6 +41,8 @@ export default function Sidebar({
   onSelect,
   onAddCategory,
   onRemoveCategory,
+  open,
+  onClose,
 }: SidebarProps) {
   const router = useRouter();
   const [adding, setAdding] = useState(false);
@@ -64,10 +70,37 @@ export default function Sidebar({
   };
 
   return (
-    <aside className="flex w-60 shrink-0 flex-col gap-1 border-r border-hairline bg-canvas-cream p-4">
-      <h1 className="mb-3 px-2 text-lg font-bold tracking-tight text-primary">
-        📑 내 북마크
-      </h1>
+    <>
+      {/* 모바일 드로어 백드롭 — md 미만에서 열렸을 때만 */}
+      {open && (
+        <div
+          className="fixed inset-0 z-40 bg-ink/30 md:hidden"
+          onClick={onClose}
+          aria-hidden
+        />
+      )}
+
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 flex w-60 shrink-0 flex-col gap-1 overflow-y-auto border-r border-hairline bg-surface-soft p-4 transition-transform duration-200 ease-out md:static md:z-auto md:translate-x-0 ${
+          open ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="mb-3 flex items-center justify-between">
+          <h1 className="font-display px-2 text-xl text-ink">
+            📑 내 북마크
+          </h1>
+          {/* 모바일 전용 닫기 버튼 */}
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-lg p-1 text-muted transition-colors hover:text-ink md:hidden"
+            aria-label="메뉴 닫기"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
 
       <NavItem
         label="전체"
@@ -82,7 +115,7 @@ export default function Sidebar({
         onClick={() => onSelect("none")}
       />
 
-      <div className="my-2 px-2 text-xs font-bold uppercase tracking-widest text-ink-mute">
+      <div className="my-2 px-2 text-xs font-medium uppercase tracking-widest text-muted-soft">
         카테고리
       </div>
 
@@ -117,12 +150,12 @@ export default function Sidebar({
             }}
             placeholder="카테고리 이름"
             autoFocus
-            className="min-w-0 flex-1 rounded-sm border border-hairline bg-canvas px-2 py-1 text-sm text-ink outline-none focus:border-primary"
+            className="min-w-0 flex-1 rounded-lg border border-hairline bg-canvas px-2 py-1 text-sm text-ink outline-none focus:border-primary"
           />
           <button
             type="button"
             onClick={submitNew}
-            className="rounded-pill bg-primary px-3 text-sm font-bold text-on-primary hover:bg-primary-press"
+            className="rounded-lg bg-primary px-3 text-sm font-medium text-on-primary hover:bg-primary-active"
           >
             추가
           </button>
@@ -131,7 +164,7 @@ export default function Sidebar({
         <button
           type="button"
           onClick={() => setAdding(true)}
-          className="mt-1 flex items-center gap-1 rounded-lg px-3 py-2 text-left text-sm text-ink-mute transition-colors hover:bg-canvas-lavender hover:text-primary"
+          className="mt-1 flex items-center gap-1 rounded-lg px-3 py-2 text-left text-sm text-muted transition-colors hover:bg-surface-card hover:text-ink"
         >
           + 카테고리 추가
         </button>
@@ -144,7 +177,7 @@ export default function Sidebar({
           type="button"
           onClick={handleLogout}
           disabled={loggingOut}
-          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-ink-mute transition-colors hover:text-danger disabled:opacity-50"
+          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-muted transition-colors hover:text-error disabled:opacity-50"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
@@ -154,15 +187,16 @@ export default function Sidebar({
           {loggingOut ? "로그아웃 중…" : "로그아웃"}
         </button>
 
-        {/* 개인정보 처리방침 링크 (인라인 링크 — 블루) */}
+        {/* 개인정보 처리방침 링크 (인라인 링크 — 코랄) */}
         <Link
           href="/privacy"
-          className="block px-3 py-1 text-xs text-link hover:text-link-hover hover:underline"
+          className="block px-3 py-1 text-xs text-primary hover:text-primary-active hover:underline"
         >
           개인정보 처리방침
         </Link>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }
 
@@ -179,7 +213,7 @@ function NavItem({ label, count, active, color, onClick, onRemove }: NavItemProp
   return (
     <div
       className={`group flex items-center rounded-lg transition-colors ${
-        active ? "bg-canvas-lavender" : "hover:bg-canvas"
+        active ? "bg-surface-card" : "hover:bg-surface-card/60"
       }`}
     >
       <button
@@ -192,18 +226,18 @@ function NavItem({ label, count, active, color, onClick, onRemove }: NavItemProp
         )}
         <span
           className={`truncate ${
-            active ? "font-bold text-primary" : "text-ink"
+            active ? "font-medium text-ink" : "text-body"
           }`}
         >
           {label}
         </span>
-        <span className="ml-auto text-xs text-ink-mute">{count}</span>
+        <span className="ml-auto text-xs text-muted-soft">{count}</span>
       </button>
       {onRemove && (
         <button
           type="button"
           onClick={onRemove}
-          className="mr-1 rounded p-1 text-ink-mute opacity-0 hover:text-danger group-hover:opacity-100"
+          className="mr-1 rounded p-1 text-muted-soft opacity-0 hover:text-error group-hover:opacity-100"
           aria-label={`${label} 삭제`}
           title="카테고리 삭제"
         >

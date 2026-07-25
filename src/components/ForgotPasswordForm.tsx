@@ -26,7 +26,7 @@ function toKoreanError(error: { message: string; code?: string }): string {
 }
 
 const inputClass =
-  "rounded-sm border border-hairline bg-canvas px-3 py-2 text-sm text-ink outline-none focus:border-primary focus:ring-1 focus:ring-primary";
+  "rounded-lg border border-hairline bg-canvas px-3 py-2 text-sm text-ink outline-none focus:border-primary focus:ring-2 focus:ring-primary/20";
 
 export default function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
@@ -59,8 +59,8 @@ export default function ForgotPasswordForm() {
     return (
       <div className="flex flex-col gap-4 text-center">
         <div className="text-4xl">📧</div>
-        <p className="text-sm text-ink-mute">
-          <span className="font-bold text-ink">{email.trim()}</span> 으로
+        <p className="text-sm text-muted">
+          <span className="font-medium text-ink">{email.trim()}</span> 으로
           <br />
           비밀번호 재설정 링크를 보냈습니다.
           <br />
@@ -68,7 +68,7 @@ export default function ForgotPasswordForm() {
         </p>
         <Link
           href="/login"
-          className="mt-2 text-sm font-bold text-link hover:text-link-hover hover:underline"
+          className="mt-2 text-sm font-medium text-primary hover:text-primary-active hover:underline"
         >
           로그인으로 돌아가기
         </Link>
@@ -82,7 +82,7 @@ export default function ForgotPasswordForm() {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <label className="flex flex-col gap-1.5">
-          <span className="text-sm font-bold text-ink">
+          <span className="text-sm font-medium text-ink">
             이메일
           </span>
           <input
@@ -100,7 +100,7 @@ export default function ForgotPasswordForm() {
         <button
           type="submit"
           disabled={!canSubmit}
-          className="mt-2 rounded-pill bg-primary px-4 py-2.5 text-sm font-bold tracking-wide text-on-primary transition-colors hover:bg-primary-press disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-on-primary transition-colors hover:bg-primary-active disabled:cursor-not-allowed disabled:bg-primary-disabled disabled:text-muted"
         >
           {loading ? "발송 중…" : "비밀번호 재설정 링크 발송"}
         </button>

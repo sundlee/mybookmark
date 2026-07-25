@@ -47,7 +47,7 @@ function toKoreanError(error: { message: string; code?: string }): string {
 }
 
 const inputClass =
-  "rounded-sm border border-hairline bg-canvas px-3 py-2 text-sm text-ink outline-none focus:border-primary focus:ring-1 focus:ring-primary";
+  "rounded-lg border border-hairline bg-canvas px-3 py-2 text-sm text-ink outline-none focus:border-primary focus:ring-2 focus:ring-primary/20";
 
 export default function SignupForm() {
   const router = useRouter();
@@ -93,7 +93,7 @@ export default function SignupForm() {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <label className="flex flex-col gap-1.5">
-          <span className="text-sm font-bold text-ink">
+          <span className="text-sm font-medium text-ink">
             이메일
           </span>
           <input
@@ -108,7 +108,7 @@ export default function SignupForm() {
         </label>
 
         <label className="flex flex-col gap-1.5">
-          <span className="text-sm font-bold text-ink">
+          <span className="text-sm font-medium text-ink">
             비밀번호
           </span>
           <input
@@ -123,7 +123,7 @@ export default function SignupForm() {
         </label>
 
         <label className="flex flex-col gap-1.5">
-          <span className="text-sm font-bold text-ink">
+          <span className="text-sm font-medium text-ink">
             비밀번호 확인
           </span>
           <input
@@ -140,7 +140,7 @@ export default function SignupForm() {
         <button
           type="submit"
           disabled={!canSubmit}
-          className="mt-2 rounded-pill bg-primary px-4 py-2.5 text-sm font-bold tracking-wide text-on-primary transition-colors hover:bg-primary-press disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-on-primary transition-colors hover:bg-primary-active disabled:cursor-not-allowed disabled:bg-primary-disabled disabled:text-muted"
         >
           {loading ? "처리 중…" : "회원가입"}
         </button>

@@ -1,12 +1,21 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Noto_Serif_KR } from "next/font/google";
 import "./globals.css";
 
-// Slacc(Slack 영감) 디자인 시스템: 프로퍼티어리 Salesforce Sans/Avant Garde 의
-// 오픈소스 대체로 Inter 를 디스플레이·본문 양쪽에 사용한다. (DESIGN.md 참고)
+// Claude(Anthropic 영감) 디자인 시스템 — DESIGN.md 참고.
+// - 본문/UI: StyreneB 의 오픈소스 대체로 Inter
+// - 디스플레이 헤드라인: 프로퍼티어리 Copernicus 세리프의 대체.
+//   한국어 UI 이므로 CJK 세리프(Noto Serif KR)로 에디토리얼 세리프 보이스를 구현한다.
+//   (CJK 폰트는 용량이 커 preload 불가 → preload: false)
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+});
+
+const notoSerifKr = Noto_Serif_KR({
+  variable: "--font-serif",
+  weight: ["400", "500", "600"],
+  preload: false,
 });
 
 // 페이지별 메타데이터: 각 page.tsx 가 title 을 덮어쓰면 template 으로 "○○ · 내 북마크" 형태가 된다.
@@ -53,9 +62,9 @@ export default function RootLayout({
   return (
     <html
       lang="ko"
-      className={`${inter.variable} h-full antialiased`}
+      className={`${inter.variable} ${notoSerifKr.variable} h-full antialiased`}
     >
-      <body className="h-full flex flex-col bg-canvas text-ink">{children}</body>
+      <body className="h-full flex flex-col bg-canvas text-body">{children}</body>
     </html>
   );
 }

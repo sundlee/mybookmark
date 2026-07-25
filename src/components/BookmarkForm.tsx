@@ -15,10 +15,10 @@ export interface BookmarkFormValues {
   categoryId: string | null;
 }
 
-// 공통 텍스트 입력 스타일 — hairline 보더 + 포커스 시 오베르진 링
+// 공통 텍스트 입력 스타일 — hairline 보더 + 포커스 시 코랄 링
 const inputClass =
-  "rounded-sm border border-hairline bg-canvas px-3 py-2 text-sm text-ink outline-none focus:border-primary focus:ring-1 focus:ring-primary";
-const labelClass = "text-sm font-bold text-ink";
+  "rounded-lg border border-hairline bg-canvas px-3 py-2 text-sm text-ink outline-none focus:border-primary focus:ring-2 focus:ring-primary/20";
+const labelClass = "text-sm font-medium text-ink";
 
 interface BookmarkFormProps {
   editing: Bookmark | null;
@@ -98,10 +98,10 @@ export default function BookmarkForm({
       onClick={onClose}
     >
       <div
-        className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl bg-canvas p-6 shadow-[0_0_32px_0_rgba(0,0,0,0.12)]"
+        className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl border border-hairline bg-canvas p-6 shadow-[0_1px_3px_rgba(20,20,19,0.08)]"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="mb-4 text-xl font-bold tracking-tight text-ink">
+        <h2 className="font-display mb-5 text-2xl text-ink">
           {editing ? "북마크 수정" : "북마크 추가"}
         </h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -117,18 +117,18 @@ export default function BookmarkForm({
                 autoFocus
                 className={`min-w-0 flex-1 ${inputClass}`}
               />
-              {/* 보조 액션 — 라벤더 pill (primary 의 부드러운 메아리) */}
+              {/* 보조 액션 — 크림 secondary 버튼 (hairline 아웃라인) */}
               <button
                 type="button"
                 onClick={() => fetchMetadata(true)}
                 disabled={!url.trim() || fetching}
-                className="shrink-0 rounded-pill bg-canvas-lavender px-4 text-sm font-bold text-ink transition-colors hover:bg-canvas-lavender/70 disabled:opacity-50"
+                className="shrink-0 rounded-lg border border-hairline bg-canvas px-4 text-sm font-medium text-ink transition-colors hover:bg-surface-card disabled:opacity-50"
                 title="페이지 정보 다시 가져오기"
               >
                 {fetching ? "가져오는 중…" : "정보 가져오기"}
               </button>
             </div>
-            {fetchError && <span className="text-xs text-danger">{fetchError}</span>}
+            {fetchError && <span className="text-xs text-error">{fetchError}</span>}
           </label>
 
           {/* 썸네일 미리보기 */}
@@ -138,7 +138,7 @@ export default function BookmarkForm({
               <img
                 src={image}
                 alt="썸네일 미리보기"
-                className="h-32 w-full bg-canvas-cream object-cover"
+                className="h-32 w-full bg-surface-card object-cover"
                 onError={() => setImage("")}
               />
             </div>
@@ -157,7 +157,7 @@ export default function BookmarkForm({
 
           <label className="flex flex-col gap-1.5">
             <span className={labelClass}>
-              설명 <span className="font-normal text-ink-mute">(선택)</span>
+              설명 <span className="font-normal text-muted">(선택)</span>
             </span>
             <textarea
               value={description}
@@ -188,13 +188,13 @@ export default function BookmarkForm({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-pill px-5 py-2.5 text-sm font-bold text-ink-mute transition-colors hover:bg-canvas-lavender hover:text-ink"
+              className="rounded-lg px-5 py-2.5 text-sm font-medium text-muted transition-colors hover:bg-surface-card hover:text-ink"
             >
               취소
             </button>
             <button
               type="submit"
-              className="rounded-pill bg-primary px-7 py-2.5 text-sm font-bold tracking-wide text-on-primary transition-colors hover:bg-primary-press disabled:opacity-50"
+              className="rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-on-primary transition-colors hover:bg-primary-active disabled:bg-primary-disabled disabled:text-muted"
               disabled={!url.trim()}
             >
               {editing ? "저장" : "추가"}
