@@ -21,7 +21,7 @@ export default function Favicon({ url, size = 36 }: FaviconProps) {
   if (failed) {
     return (
       <div
-        className="flex shrink-0 items-center justify-center rounded-md bg-zinc-200 font-semibold text-zinc-600 dark:bg-zinc-700 dark:text-zinc-200"
+        className="flex shrink-0 items-center justify-center rounded-md bg-canvas-lavender font-bold text-primary"
         style={{ width: size, height: size, fontSize: size * 0.45 }}
         aria-hidden
       >
@@ -39,7 +39,7 @@ export default function Favicon({ url, size = 36 }: FaviconProps) {
       height={size}
       loading="lazy"
       onError={() => setFailed(true)}
-      className="shrink-0 rounded-md bg-white object-contain dark:bg-zinc-800"
+      className="shrink-0 rounded-md bg-canvas object-contain"
       style={{ width: size, height: size }}
     />
   );

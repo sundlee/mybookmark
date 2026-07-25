@@ -22,7 +22,7 @@ export default function Toast({ message, onClose, duration = 4000 }: ToastProps)
   return (
     <div
       role="alert"
-      className="fixed left-1/2 top-6 z-50 flex -translate-x-1/2 items-center gap-2 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white shadow-lg"
+      className="fixed left-1/2 top-6 z-50 flex -translate-x-1/2 items-center gap-2 rounded-pill bg-danger px-5 py-2.5 text-sm font-bold text-on-primary shadow-[0_1px_10px_0_rgba(0,0,0,0.2)]"
     >
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="10" />

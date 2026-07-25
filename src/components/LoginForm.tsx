@@ -45,7 +45,7 @@ function toKoreanError(error: { message: string; code?: string }): string {
 }
 
 const inputClass =
-  "rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100";
+  "rounded-sm border border-hairline bg-canvas px-3 py-2 text-sm text-ink outline-none focus:border-primary focus:ring-1 focus:ring-primary";
 
 export default function LoginForm({ initialError = "" }: { initialError?: string }) {
   const router = useRouter();
@@ -100,7 +100,7 @@ export default function LoginForm({ initialError = "" }: { initialError?: string
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <label className="flex flex-col gap-1.5">
-          <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <span className="text-sm font-bold text-ink">
             이메일
           </span>
           <input
@@ -115,7 +115,7 @@ export default function LoginForm({ initialError = "" }: { initialError?: string
         </label>
 
         <label className="flex flex-col gap-1.5">
-          <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <span className="text-sm font-bold text-ink">
             비밀번호
           </span>
           <input
@@ -132,7 +132,7 @@ export default function LoginForm({ initialError = "" }: { initialError?: string
         <button
           type="submit"
           disabled={!canSubmit}
-          className="mt-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-2 rounded-pill bg-primary px-4 py-2.5 text-sm font-bold tracking-wide text-on-primary transition-colors hover:bg-primary-press disabled:cursor-not-allowed disabled:opacity-50"
         >
           {loading ? "처리 중…" : "로그인"}
         </button>
@@ -140,9 +140,9 @@ export default function LoginForm({ initialError = "" }: { initialError?: string
 
       {/* 구분선 */}
       <div className="my-4 flex items-center gap-3">
-        <span className="h-px flex-1 bg-zinc-200 dark:bg-zinc-700" />
-        <span className="text-xs text-zinc-400">또는</span>
-        <span className="h-px flex-1 bg-zinc-200 dark:bg-zinc-700" />
+        <span className="h-px flex-1 bg-hairline" />
+        <span className="text-xs text-ink-mute">또는</span>
+        <span className="h-px flex-1 bg-hairline" />
       </div>
 
       {/* 카카오 소셜 로그인 버튼 (카카오 공식 버튼 이미지 사용) */}

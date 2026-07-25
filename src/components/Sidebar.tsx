@@ -64,8 +64,8 @@ export default function Sidebar({
   };
 
   return (
-    <aside className="flex w-60 shrink-0 flex-col gap-1 border-r border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-950">
-      <h1 className="mb-3 px-2 text-lg font-bold text-zinc-900 dark:text-zinc-50">
+    <aside className="flex w-60 shrink-0 flex-col gap-1 border-r border-hairline bg-canvas-cream p-4">
+      <h1 className="mb-3 px-2 text-lg font-bold tracking-tight text-primary">
         📑 내 북마크
       </h1>
 
@@ -82,7 +82,7 @@ export default function Sidebar({
         onClick={() => onSelect("none")}
       />
 
-      <div className="my-2 px-2 text-xs font-semibold uppercase tracking-wide text-zinc-400">
+      <div className="my-2 px-2 text-xs font-bold uppercase tracking-widest text-ink-mute">
         카테고리
       </div>
 
@@ -117,12 +117,12 @@ export default function Sidebar({
             }}
             placeholder="카테고리 이름"
             autoFocus
-            className="min-w-0 flex-1 rounded-md border border-zinc-300 bg-white px-2 py-1 text-sm outline-none focus:border-indigo-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+            className="min-w-0 flex-1 rounded-sm border border-hairline bg-canvas px-2 py-1 text-sm text-ink outline-none focus:border-primary"
           />
           <button
             type="button"
             onClick={submitNew}
-            className="rounded-md bg-indigo-600 px-2 text-sm text-white hover:bg-indigo-700"
+            className="rounded-pill bg-primary px-3 text-sm font-bold text-on-primary hover:bg-primary-press"
           >
             추가
           </button>
@@ -131,20 +131,20 @@ export default function Sidebar({
         <button
           type="button"
           onClick={() => setAdding(true)}
-          className="mt-1 flex items-center gap-1 rounded-lg px-3 py-2 text-left text-sm text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
+          className="mt-1 flex items-center gap-1 rounded-lg px-3 py-2 text-left text-sm text-ink-mute transition-colors hover:bg-canvas-lavender hover:text-primary"
         >
           + 카테고리 추가
         </button>
       )}
 
       {/* 최하단 영역 (mt-auto 로 사이드바 맨 아래 고정) */}
-      <div className="mt-auto border-t border-zinc-200 pt-4 dark:border-zinc-800">
+      <div className="mt-auto border-t border-hairline pt-4">
         {/* 로그아웃 버튼 */}
         <button
           type="button"
           onClick={handleLogout}
           disabled={loggingOut}
-          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-zinc-500 hover:text-red-600 disabled:opacity-50 dark:text-zinc-400 dark:hover:text-red-500"
+          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-ink-mute transition-colors hover:text-danger disabled:opacity-50"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
@@ -154,10 +154,10 @@ export default function Sidebar({
           {loggingOut ? "로그아웃 중…" : "로그아웃"}
         </button>
 
-        {/* 개인정보 처리방침 링크 (회색) */}
+        {/* 개인정보 처리방침 링크 (인라인 링크 — 블루) */}
         <Link
           href="/privacy"
-          className="block px-3 py-1 text-xs text-zinc-400 hover:text-zinc-600 hover:underline dark:text-zinc-500 dark:hover:text-zinc-300"
+          className="block px-3 py-1 text-xs text-link hover:text-link-hover hover:underline"
         >
           개인정보 처리방침
         </Link>
@@ -178,8 +178,8 @@ interface NavItemProps {
 function NavItem({ label, count, active, color, onClick, onRemove }: NavItemProps) {
   return (
     <div
-      className={`group flex items-center rounded-lg ${
-        active ? "bg-indigo-100 dark:bg-indigo-950" : "hover:bg-zinc-100 dark:hover:bg-zinc-800"
+      className={`group flex items-center rounded-lg transition-colors ${
+        active ? "bg-canvas-lavender" : "hover:bg-canvas"
       }`}
     >
       <button
@@ -192,20 +192,18 @@ function NavItem({ label, count, active, color, onClick, onRemove }: NavItemProp
         )}
         <span
           className={`truncate ${
-            active
-              ? "font-medium text-indigo-700 dark:text-indigo-300"
-              : "text-zinc-700 dark:text-zinc-300"
+            active ? "font-bold text-primary" : "text-ink"
           }`}
         >
           {label}
         </span>
-        <span className="ml-auto text-xs text-zinc-400">{count}</span>
+        <span className="ml-auto text-xs text-ink-mute">{count}</span>
       </button>
       {onRemove && (
         <button
           type="button"
           onClick={onRemove}
-          className="mr-1 rounded p-1 text-zinc-400 opacity-0 hover:text-red-600 group-hover:opacity-100"
+          className="mr-1 rounded p-1 text-ink-mute opacity-0 hover:text-danger group-hover:opacity-100"
           aria-label={`${label} 삭제`}
           title="카테고리 삭제"
         >

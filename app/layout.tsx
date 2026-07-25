@@ -1,14 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// Slacc(Slack 영감) 디자인 시스템: 프로퍼티어리 Salesforce Sans/Avant Garde 의
+// 오픈소스 대체로 Inter 를 디스플레이·본문 양쪽에 사용한다. (DESIGN.md 참고)
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -56,9 +53,9 @@ export default function RootLayout({
   return (
     <html
       lang="ko"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} h-full antialiased`}
     >
-      <body className="h-full flex flex-col">{children}</body>
+      <body className="h-full flex flex-col bg-canvas text-ink">{children}</body>
     </html>
   );
 }

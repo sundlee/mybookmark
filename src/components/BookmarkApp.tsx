@@ -86,12 +86,12 @@ export default function BookmarkApp() {
         onRemoveCategory={removeCategory}
       />
 
-      <main className="flex flex-1 flex-col overflow-hidden">
+      <main className="flex flex-1 flex-col overflow-hidden bg-canvas">
         {/* 상단 바: 검색 + 추가 버튼 */}
-        <header className="flex items-center gap-3 border-b border-zinc-200 p-4 dark:border-zinc-800">
+        <header className="flex items-center gap-3 border-b border-hairline p-4">
           <div className="relative flex-1">
             <svg
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400"
+              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-mute"
               width="16" height="16" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
             >
@@ -103,13 +103,14 @@ export default function BookmarkApp() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="제목 · URL 검색"
-              className="w-full rounded-lg border border-zinc-300 bg-white py-2 pl-9 pr-3 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+              className="w-full rounded-md border border-hairline bg-canvas py-2 pl-9 pr-3 text-sm text-ink outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             />
           </div>
+          {/* 시스템 전역의 유일한 채워진 CTA — 오베르진 pill */}
           <button
             type="button"
             onClick={openAdd}
-            className="shrink-0 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+            className="shrink-0 rounded-pill bg-primary px-7 py-2.5 text-sm font-bold tracking-wide text-on-primary transition-colors hover:bg-primary-press"
           >
             + 북마크 추가
           </button>
@@ -117,7 +118,7 @@ export default function BookmarkApp() {
 
         {/* Supabase 오류 배너 */}
         {error && (
-          <div className="border-b border-red-200 bg-red-50 px-6 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">
+          <div className="border-b px-6 py-2 text-sm text-danger" style={{ borderColor: "#f0d4cb", backgroundColor: "#fbeae4" }}>
             ⚠️ {error}
           </div>
         )}
@@ -126,7 +127,7 @@ export default function BookmarkApp() {
         <div className="flex-1 overflow-y-auto">
           <div className="min-h-full p-6">
             {!ready ? (
-              <div className="flex min-h-[60vh] items-center justify-center text-zinc-400">
+              <div className="flex min-h-[60vh] items-center justify-center text-ink-mute">
                 불러오는 중…
               </div>
             ) : visibleBookmarks.length === 0 ? (
@@ -147,7 +148,7 @@ export default function BookmarkApp() {
           </div>
 
           {/* 푸터 — 본문 콘텐츠 맨 아래에 위치해 스크롤해야 보인다 */}
-          <footer className="border-t border-zinc-200 px-6 py-4 text-center text-xs text-zinc-400 dark:border-zinc-800 dark:text-zinc-500">
+          <footer className="border-t border-hairline px-6 py-4 text-center text-xs text-ink-mute">
             본 페이지는 한 입 크기로 잘라먹는 바이브코딩의 강의롤 보고 작성했습니다.
           </footer>
         </div>
@@ -172,7 +173,7 @@ export default function BookmarkApp() {
 
 function EmptyState({ hasQuery, onAdd }: { hasQuery: boolean; onAdd: () => void }) {
   return (
-    <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 text-center text-zinc-400">
+    <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 text-center text-ink-mute">
       <div className="text-5xl">🔖</div>
       {hasQuery ? (
         <p>검색 결과가 없습니다.</p>
@@ -182,7 +183,7 @@ function EmptyState({ hasQuery, onAdd }: { hasQuery: boolean; onAdd: () => void 
           <button
             type="button"
             onClick={onAdd}
-            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+            className="rounded-pill bg-primary px-7 py-2.5 text-sm font-bold tracking-wide text-on-primary transition-colors hover:bg-primary-press"
           >
             첫 북마크 추가하기
           </button>

@@ -26,7 +26,7 @@ function toKoreanError(error: { message: string; code?: string }): string {
 }
 
 const inputClass =
-  "rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100";
+  "rounded-sm border border-hairline bg-canvas px-3 py-2 text-sm text-ink outline-none focus:border-primary focus:ring-1 focus:ring-primary";
 
 export default function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
@@ -59,8 +59,8 @@ export default function ForgotPasswordForm() {
     return (
       <div className="flex flex-col gap-4 text-center">
         <div className="text-4xl">📧</div>
-        <p className="text-sm text-zinc-600 dark:text-zinc-300">
-          <span className="font-medium">{email.trim()}</span> 으로
+        <p className="text-sm text-ink-mute">
+          <span className="font-bold text-ink">{email.trim()}</span> 으로
           <br />
           비밀번호 재설정 링크를 보냈습니다.
           <br />
@@ -68,7 +68,7 @@ export default function ForgotPasswordForm() {
         </p>
         <Link
           href="/login"
-          className="mt-2 text-sm font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+          className="mt-2 text-sm font-bold text-link hover:text-link-hover hover:underline"
         >
           로그인으로 돌아가기
         </Link>
@@ -82,7 +82,7 @@ export default function ForgotPasswordForm() {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <label className="flex flex-col gap-1.5">
-          <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <span className="text-sm font-bold text-ink">
             이메일
           </span>
           <input
@@ -100,7 +100,7 @@ export default function ForgotPasswordForm() {
         <button
           type="submit"
           disabled={!canSubmit}
-          className="mt-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-2 rounded-pill bg-primary px-4 py-2.5 text-sm font-bold tracking-wide text-on-primary transition-colors hover:bg-primary-press disabled:cursor-not-allowed disabled:opacity-50"
         >
           {loading ? "발송 중…" : "비밀번호 재설정 링크 발송"}
         </button>

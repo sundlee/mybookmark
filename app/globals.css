@@ -7,27 +7,66 @@
  */
 @source not "../.claude";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * Slacc(Slack 영감) 디자인 시스템 — DESIGN.md 기반.
+ * 브랜드는 라이트 전용이므로, 기존 컴포넌트에 흩어진 `dark:` 유틸이
+ * OS 다크모드에서 브랜드와 충돌하지 않도록 `dark` 변형을 무력화한다.
+ * (`.dark` 클래스는 어디에도 부여되지 않으므로 dark: 유틸은 항상 비활성)
+ */
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* 브랜드 & 표면 — 오베르진 중심의 단일 primary 체계 */
+  --color-primary: #4a154b;
+  --color-primary-press: #611f69;
+  --color-primary-tint: #592466;
+  --color-on-primary: #ffffff;
+  --color-on-aubergine-mute: #d9bdde;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* 텍스트 */
+  --color-ink: #1d1d1d;
+  --color-ink-mute: #696969;
+
+  /* 링크 — 오베르진 세계의 유일한 색채 이탈 */
+  --color-link: #1264a3;
+  --color-link-hover: #3860be;
+
+  /* 캔버스 / 표면 */
+  --color-canvas: #ffffff;
+  --color-canvas-cream: #f4ede4;
+  --color-canvas-lavender: #f9f0ff;
+  --color-surface-aubergine: #4a154b;
+  --color-hairline: #e6e6e6;
+
+  /* 시맨틱 */
+  --color-danger: #cc4117;
+  --color-success: #007a5a;
+
+  /* 라운드 스케일 — 버튼은 pill(90px) */
+  --radius-pill: 90px;
+
+  /* 타이포그래피 — 프로퍼티어리 폰트 대체로 Inter 사용 */
+  --font-sans: var(--font-inter);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  /* 디스플레이/본문 모두 살짝 타이트한 트래킹으로 브랜드 밀도 유지 */
+  letter-spacing: -0.011em;
+}
+
+/*
+ * 시그니처: 파스텔-메시 그라디언트 배경.
+ * peach + lavender + dusty green 스톱을 큰 반경으로 흐려 겹친 대기감.
+ * 그림자 없이 '떠 있는' 느낌(depth without shadows)을 만든다.
+ */
+.pastel-mesh {
+  background-color: var(--color-canvas-cream);
+  background-image:
+    radial-gradient(60% 55% at 15% 20%, #ffe6d5 0%, rgba(255, 230, 213, 0) 60%),
+    radial-gradient(55% 50% at 85% 15%, #f0e0ff 0%, rgba(240, 224, 255, 0) 60%),
+    radial-gradient(60% 60% at 75% 85%, #dff0e4 0%, rgba(223, 240, 228, 0) 60%),
+    radial-gradient(50% 50% at 25% 90%, #f9f0ff 0%, rgba(249, 240, 255, 0) 60%);
 }

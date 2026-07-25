@@ -11,34 +11,34 @@ export const metadata: Metadata = {
 
 export default function SignupPage() {
   return (
-    <div className="flex flex-1 items-center justify-center bg-zinc-50 p-4 dark:bg-zinc-950">
-      <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-xl dark:bg-zinc-900">
+    <div className="pastel-mesh flex flex-1 items-center justify-center p-4">
+      <div className="w-full max-w-sm rounded-2xl bg-canvas p-8 shadow-[0_0_32px_0_rgba(0,0,0,0.1)]">
         {/* 로고 */}
-        <h1 className="mb-1 text-center text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+        <h1 className="mb-1 text-center text-2xl font-bold tracking-tight text-primary">
           📑 내 북마크
         </h1>
-        <p className="mb-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mb-8 text-center text-sm text-ink-mute">
           계정을 만들고 시작하세요
         </p>
 
         <SignupForm />
 
         {/* 로그인 페이지로 이동 */}
-        <p className="mt-6 text-center text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mt-6 text-center text-sm text-ink-mute">
           이미 계정이 있으신가요?{" "}
           <Link
             href="/login"
-            className="font-medium text-indigo-600 hover:text-indigo-700 hover:underline dark:text-indigo-400"
+            className="font-bold text-link hover:text-link-hover hover:underline"
           >
             로그인
           </Link>
         </p>
 
-        {/* 개인정보 처리방침 링크 (회색) */}
+        {/* 개인정보 처리방침 링크 */}
         <p className="mt-4 text-center text-xs">
           <Link
             href="/privacy"
-            className="text-zinc-400 hover:text-zinc-600 hover:underline dark:text-zinc-500 dark:hover:text-zinc-300"
+            className="text-link hover:text-link-hover hover:underline"
           >
             개인정보 처리방침
           </Link>
