@@ -4,9 +4,12 @@
 // 현재 로그인한 사용자의 데이터만 로딩하고, CRUD 는 Supabase 에 반영 후
 // 로컬 상태를 갱신한다(낙관적 업데이트). 계정이 바뀌면 데이터를 다시 불러온다.
 // DB 컬럼(snake_case)↔앱 타입(camelCase)은 매퍼로 변환한다.
+// 모든 요청은 withJwtClockRetry 로 감싸, 세션 갱신 직후 PostgREST 가 새 토큰을
+// 잠시 거부하는 일시적 오류(PGRST303 "JWT issued at future")를 자동으로 재시도한다.
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createClient } from "@/src/utils/supabase/client";
+import { isJwtClockError, withJwtClockRetry } from "./supabaseRetry";
 import type { Bookmark, Category } from "./types";
 
 // 모듈 1회 생성 (브라우저 클라이언트는 싱글톤으로 재사용)
@@ -41,6 +44,14 @@ function toBookmark(r: BookmarkRow): Bookmark {
     categoryId: r.category_id,
     createdAt: new Date(r.created_at).getTime(),
   };
+}
+
+// 사용자에게 보여줄 오류 문구.
+// 재시도까지 실패한 JWT 시각 오류는 "JWT issued at future" 원문 대신 안내 문구를 쓴다.
+function toErrorMessage(error: { code?: string; message: string }): string {
+  return isJwtClockError(error)
+    ? "서버 시각 오류로 요청이 거부되었습니다. 잠시 후 다시 시도해 주세요."
+    : error.message;
 }
 
 export interface UseBookmarks {
@@ -90,23 +101,28 @@ export function useBookmarks(): UseBookmarks {
     }
 
     const [cats, bms] = await Promise.all([
-      supabase
-        .from("categories")
-        .select("*")
-        .eq("user_id", uid)
-        .order("created_at", { ascending: true }),
-      supabase
-        .from("bookmarks")
-        .select("*")
-        .eq("user_id", uid)
-        .order("created_at", { ascending: false }),
+      withJwtClockRetry(() =>
+        supabase
+          .from("categories")
+          .select("*")
+          .eq("user_id", uid)
+          .order("created_at", { ascending: true }),
+      ),
+      withJwtClockRetry(() =>
+        supabase
+          .from("bookmarks")
+          .select("*")
+          .eq("user_id", uid)
+          .order("created_at", { ascending: false }),
+      ),
     ]);
 
     // 로딩 도중 계정이 또 바뀌었으면 결과를 버린다
     if (loadedUserIdRef.current !== uid) return;
 
-    if (cats.error || bms.error) {
-      setError(cats.error?.message ?? bms.error?.message ?? "데이터를 불러오지 못했습니다.");
+    const loadError = cats.error ?? bms.error;
+    if (loadError) {
+      setError(toErrorMessage(loadError));
     } else {
       setCategories((cats.data as CategoryRow[]).map(toCategory));
       setBookmarks((bms.data as BookmarkRow[]).map(toBookmark));
@@ -131,18 +147,20 @@ export function useBookmarks(): UseBookmarks {
   }, [loadFor]);
 
   const addBookmark = useCallback<UseBookmarks["addBookmark"]>(async (input) => {
-    const { data, error } = await supabase
-      .from("bookmarks")
-      .insert({
-        title: input.title.trim(),
-        url: input.url.trim(),
-        description: input.description?.trim() || null,
-        image: input.image?.trim() || null,
-        category_id: input.categoryId,
-      })
-      .select()
-      .single();
-    if (error) return setError(error.message);
+    const { data, error } = await withJwtClockRetry(() =>
+      supabase
+        .from("bookmarks")
+        .insert({
+          title: input.title.trim(),
+          url: input.url.trim(),
+          description: input.description?.trim() || null,
+          image: input.image?.trim() || null,
+          category_id: input.categoryId,
+        })
+        .select()
+        .single(),
+    );
+    if (error) return setError(toErrorMessage(error));
     setBookmarks((prev) => [toBookmark(data as BookmarkRow), ...prev]);
   }, []);
 
@@ -155,37 +173,36 @@ export function useBookmarks(): UseBookmarks {
     if (patch.image !== undefined) row.image = patch.image.trim() || null;
     if (patch.categoryId !== undefined) row.category_id = patch.categoryId;
 
-    const { data, error } = await supabase
-      .from("bookmarks")
-      .update(row)
-      .eq("id", id)
-      .select()
-      .single();
-    if (error) return setError(error.message);
+    const { data, error } = await withJwtClockRetry(() =>
+      supabase.from("bookmarks").update(row).eq("id", id).select().single(),
+    );
+    if (error) return setError(toErrorMessage(error));
     setBookmarks((prev) =>
       prev.map((b) => (b.id === id ? toBookmark(data as BookmarkRow) : b)),
     );
   }, []);
 
   const removeBookmark = useCallback<UseBookmarks["removeBookmark"]>(async (id) => {
-    const { error } = await supabase.from("bookmarks").delete().eq("id", id);
-    if (error) return setError(error.message);
+    const { error } = await withJwtClockRetry(() =>
+      supabase.from("bookmarks").delete().eq("id", id),
+    );
+    if (error) return setError(toErrorMessage(error));
     setBookmarks((prev) => prev.filter((b) => b.id !== id));
   }, []);
 
   const addCategory = useCallback<UseBookmarks["addCategory"]>(async (name, color) => {
-    const { data, error } = await supabase
-      .from("categories")
-      .insert({ name: name.trim(), color })
-      .select()
-      .single();
-    if (error) return setError(error.message);
+    const { data, error } = await withJwtClockRetry(() =>
+      supabase.from("categories").insert({ name: name.trim(), color }).select().single(),
+    );
+    if (error) return setError(toErrorMessage(error));
     setCategories((prev) => [...prev, toCategory(data as CategoryRow)]);
   }, []);
 
   const removeCategory = useCallback<UseBookmarks["removeCategory"]>(async (id) => {
-    const { error } = await supabase.from("categories").delete().eq("id", id);
-    if (error) return setError(error.message);
+    const { error } = await withJwtClockRetry(() =>
+      supabase.from("categories").delete().eq("id", id),
+    );
+    if (error) return setError(toErrorMessage(error));
     // DB FK(on delete set null)로 해당 북마크의 category_id 가 null 이 되므로 로컬도 맞춰준다
     setCategories((prev) => prev.filter((c) => c.id !== id));
     setBookmarks((prev) =>
