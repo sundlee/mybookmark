@@ -30,7 +30,14 @@ create index if not exists bookmarks_category_id_idx   on public.bookmarks(categ
 create index if not exists bookmarks_user_id_idx       on public.bookmarks(user_id);
 create index if not exists bookmarks_created_at_idx    on public.bookmarks(created_at desc);
 
--- 3) RLS 활성화 + 작업별 세분화 정책 (로그인 사용자, 본인 데이터만)
+-- 3) Data API 접근 권한 (2026-10-30 이후 생성되는 public 테이블은 자동 부여되지 않음)
+--    anon 은 RLS 정책이 없어 어차피 접근 불가하므로 부여하지 않음.
+grant select, insert, update, delete on public.categories to authenticated;
+grant select, insert, update, delete on public.bookmarks  to authenticated;
+grant select, insert, update, delete on public.categories to service_role;
+grant select, insert, update, delete on public.bookmarks  to service_role;
+
+-- 4) RLS 활성화 + 작업별 세분화 정책 (로그인 사용자, 본인 데이터만)
 alter table public.categories enable row level security;
 alter table public.bookmarks  enable row level security;
 
